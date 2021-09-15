@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./assignment/app.js"
+    "start": "nodemon ./section8/app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
@@ -13,5 +13,8 @@
     "express": "^4.17.1",
     "express-handlebars": "^5.3.3",
     "pug": "^3.0.2"
+  },
+  "nodemonConfig": {
+    "verbose": true
   }
 }
