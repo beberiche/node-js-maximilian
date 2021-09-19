@@ -1,9 +1,9 @@
 const path = require('path');
 
 const express = require('express');
-const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/error');
+const db = require('./util/database');
 
 const app = express();
 
@@ -13,7 +13,16 @@ app.set('views', `${__dirname}/views`);
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+// execute ./util/database.js => return pool.promise()
+// db.execute('SELECT * FROM products')
+//   .then((result) => {
+//     console.log(result[0]);
+//   })
+//   .catch((err) => {
+//     console.log('Error : ', err);
+//   });
+
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
