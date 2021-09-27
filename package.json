@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./section13/app.js"
+    "start": "nodemon ./mongoose/app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
