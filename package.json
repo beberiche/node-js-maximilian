@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./payments/app.js"
+    "start": "nodemon ./rest-api/app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
