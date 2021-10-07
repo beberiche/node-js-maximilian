@@ -145,8 +145,8 @@ class Feed extends Component {
           _id: resData.post._id,
           title: resData.post.title,
           content: resData.post.content,
-          creator: resData.post.creator,
-          createdAt: resData.post.createdAt
+          createdAt: resData.post.createdAt,
+          creator: resData.creator
         };
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts];
