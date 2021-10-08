@@ -77,3 +77,44 @@ exports.login = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getUserStatus = (req, res, next) => {
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Not found user data');
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ message: 'success', status: user.status });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.updateUserStatus = (req, res, next) => {
+  const newStatus = req.body.status;
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error('Not found user data');
+        error.statusCode = 404;
+        throw error;
+      }
+      user.status = newStatus;
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).json({ message: 'update user status' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
