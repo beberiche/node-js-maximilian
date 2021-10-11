@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon start ./async-await/app.js"
+    "start": "nodemon start ./web-socket/app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "pdfkit": "^0.12.3",
     "pug": "^3.0.2",
     "sequelize": "^6.6.5",
+    "socket.io": "^4.2.0",
     "stripe": "^8.178.0"
   },
   "nodemonConfig": {
