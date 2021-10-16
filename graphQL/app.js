@@ -1,21 +1,23 @@
-const express = require('express');
 const path = require('path');
-const app = express();
+const fs = require('fs');
 
+const express = require('express');
 const mongoose = require('mongoose');
-
 const multer = require('multer');
-
 const { graphqlHTTP } = require('express-graphql');
-const graphSchema = require('./graphql/schema');
-const graphResolver = require('./graphql/resolves');
+
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
+const auth = require('./middleware/auth');
+
+const app = express();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, `${__dirname}/images`);
+    cb(null, 'images');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+    cb(null, new Date().toISOString() + '-' + file.originalname);
   },
 });
 
@@ -31,15 +33,18 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// app.use(express.urlencoded()); // x-www-form-urlencoded
+// app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(express.json()); // application/json
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//cors
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE'
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
@@ -48,24 +53,39 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
-);
+app.use(auth);
 
-app.use(`${__dirname}/images`, express.static(path.join(__dirname, 'images')));
+app.put('/post-image', (req, res, next) => {
+  if (!req.isAuth) {
+    throw new Error('Not authenticated!');
+  }
+
+  if (!req.file) {
+    return res.status(200).json({ message: 'No file provided!' });
+  }
+
+  if (req.body.oldPath) {
+    console.log(req.body.oldPath);
+    clearImage(req.body.oldPath);
+  }
+
+  return res
+    .status(201)
+    .json({ message: 'File stored', filePath: req.file.path });
+});
 
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: graphSchema,
-    rootValue: graphResolver,
-    graphiql: true,
-    formatError(err) {
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    // graphiql: true,
+    customFormatErrorFn(err) {
       if (!err.originalError) {
         return err;
       }
       const data = err.originalError.data;
-      const message = err.message || 'An error occurred';
+      const message = err.message || 'An error occurred.';
       const code = err.originalError.code || 500;
       return { message: message, status: code, data: data };
     },
@@ -85,8 +105,13 @@ const MONGODB_URI =
 
 mongoose
   .connect(MONGODB_URI)
-  .then(() => {
+  .then((result) => {
     app.listen(8080);
-    console.log('server is running....');
   })
   .catch((err) => console.log(err));
+
+const clearImage = (filePath) => {
+  console.log(filePath);
+  filePath = path.join(__dirname, '.', filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};

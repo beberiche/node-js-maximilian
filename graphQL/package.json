@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon start ./graphQL/app.js"
+    "start": "nodemon start app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
