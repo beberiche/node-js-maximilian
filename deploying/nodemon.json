@@ -1,0 +1,8 @@
+{
+  "env": {
+    "MONGO_USER": "beberiche",
+    "MONGO_PASSWORD": "970409",
+    "MONGO_DEFAULT_DATABASE": "shop",
+    "STRIPE_KEY": "sk_test_51Jgt8vED8ulcyw7FOLbG2gMbVMLF4Oau5SawWsBrW0WyhkYm1BNws2FiPtVr8n2fr9jVTvL8DbjvKQf19qNLP8Cb00FftO9t43"
+  }
+}
